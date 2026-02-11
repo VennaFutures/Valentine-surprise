@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine Surprise 💗</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<!-- PAGE 0: Name Input -->
+<div id="page0" class="page">
+  <div class="card">
+    <h1>Before we begin…</h1>
+    <p>Fill in your name please 💗</p>
+    <input type="text" id="username" placeholder="Your name...">
+    <button id="startBtn">Continue 💌</button>
+    <p id="nameError" class="error"></p>
+  </div>
+</div>
+
+<!-- PAGE 1: Valentine Question -->
+<div id="page1" class="page hidden">
+  <h1 id="questionText"></h1>
+  <div class="buttons">
+    <button id="yesBtn">YES 💗</button>
+    <button id="noBtn">NO 🥺</button>
+  </div>
+  <p id="noMessage" class="error"></p>
+</div>
+
+<!-- PAGE 2: Orbit Images -->
+<div id="page2" class="page hidden">
+  <div class="orbit-container">
+    <img id="centerImage" src="assets/center-image.jpg" alt="Center Image">
+    <div class="orbit-images">
+      <img src="assets/orbit1.jpg" class="orbit" alt="">
+      <img src="assets/orbit2.jpg" class="orbit" alt="">
+      <img src="assets/orbit3.jpg" class="orbit" alt="">
+      <img src="assets/orbit4.jpg" class="orbit" alt="">
+      <img src="assets/orbit5.jpg" class="orbit" alt="">
+      <img src="assets/orbit6.jpg" class="orbit" alt="">
+      <img src="assets/orbit7.jpg" class="orbit" alt="">
+      <img src="assets/orbit8.jpg" class="orbit" alt="">
+    </div>
+    <button id="pressMeBtn">Press Me 🎀</button>
+    <p id="giftText"></p>
+  </div>
+</div>
+
+<!-- PAGE 3: Handwritten Letter -->
+<div id="page3" class="page hidden">
+  <div class="letter">
+    <p id="letterText"></p>
+  </div>
+  <div class="scratch-container">
+    <canvas class="scratchCard" id="card1"></canvas>
+    <canvas class="scratchCard" id="card2"></canvas>
+    <canvas class="scratchCard" id="card3"></canvas>
+    <canvas class="scratchCard" id="card4"></canvas>
+    <canvas class="scratchCard" id="card5"></canvas>
+    <canvas class="scratchCard" id="card6"></canvas>
+    <canvas class="scratchCard" id="card7"></canvas>
+    <canvas class="scratchCard" id="card8"></canvas>
+    <canvas class="scratchCard" id="card9"></canvas>
+  </div>
+  <div id="rainWords"></div>
+</div>
+
+<!-- Background Music -->
+<audio id="bgMusic" src="assets/jazz.mp3" loop></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
