@@ -1,147 +1,167 @@
-let userName = '';
+let userName = "";
 let noCount = 0;
+let scratched = 0;
 
-// Music
-const bgMusic = document.getElementById('bgMusic');
+const pages = document.querySelectorAll(".page");
+const bgMusic = document.getElementById("bgMusic");
 
-// Pages
-const page0 = document.getElementById('page0');
-const page1 = document.getElementById('page1');
-const page2 = document.getElementById('page2');
-const page3 = document.getElementById('page3');
-
-const usernameInput = document.getElementById('username');
-const startBtn = document.getElementById('startBtn');
-const nameError = document.getElementById('nameError');
-
-// PAGE 0
-startBtn.addEventListener('click', ()=>{
-    if(usernameInput.value.trim()===''){
-        nameError.textContent = "Princess… I need your name first 🥺";
-    } else {
-        userName = usernameInput.value.trim();
-        page0.classList.add('hidden');
-        page1.classList.remove('hidden');
-        document.getElementById('questionText').textContent = `${userName}… will you be my Valentine?`;
-        bgMusic.play();
-    }
-});
-
-// PAGE 1 NO Button
-const noBtn = document.getElementById('noBtn');
-const yesBtn = document.getElementById('yesBtn');
-const noMessage = document.getElementById('noMessage');
-
-noBtn.addEventListener('click', ()=>{
-    noCount++;
-    const messages = [
-        "Oopsie… let’s try that again 🥺",
-        "Come onnn 😭💗",
-        "You’re breaking my soft princess heart 😔🎀",
-        "But imagine saying yes though… 😌✨",
-        "This button is getting shy…",
-        "Just press yes, my love 💕"
-    ];
-    noMessage.textContent = messages[Math.min(noCount-1, messages.length-1)];
-    noBtn.style.position = "absolute";
-    noBtn.style.top = Math.random()*80 + "%";
-    noBtn.style.left = Math.random()*80 + "%";
-    yesBtn.style.transform = `scale(${1+noCount*0.05})`;
-});
-
-// PAGE 1 YES Button
-yesBtn.addEventListener('click', ()=>{
-    confetti({ particleCount: 200, spread: 70, origin: { y:0.6 }});
-    gsap.to(yesBtn, {scale:1.5, duration:0.5, yoyo:true, repeat:1});
-    setTimeout(()=>{
-        page1.classList.add('hidden');
-        page2.classList.remove('hidden');
-        startOrbitAnimation();
-    },2000);
-});
-
-// PAGE 2: Orbit Animation
-const center = document.getElementById('centerImage');
-const orbitImages = document.querySelectorAll('.orbit');
-const pressMeBtn = document.getElementById('pressMeBtn');
-const giftText = document.getElementById('giftText');
-
-function startOrbitAnimation(){
-    const radius = 150;
-    orbitImages.forEach((img,i)=>{
-        let angle = i * (Math.PI*2 / orbitImages.length);
-        gsap.set(img,{x:radius*Math.cos(angle), y:radius*Math.sin(angle)});
-        gsap.to(img,{rotation:360, repeat:-1, duration:15, ease:"linear"});
-    });
+function showPage(id){
+  pages.forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-pressMeBtn.addEventListener('click', ()=>{
-    orbitImages.forEach((img,i)=>{
-        gsap.to(img,{x:0, y:0, scale:0, duration:1.5, delay:i*0.2});
-    });
-    setTimeout(()=>{
-        giftText.textContent = "🎁 Unbox me dear!";
-        giftText.style.fontSize="24px";
-        giftText.style.color="#5E2B3B";
-        giftText.style.textAlign="center";
-        giftText.style.marginTop="20px";
-    },2500);
-    setTimeout(()=>{
-        page2.classList.add('hidden');
-        page3.classList.remove('hidden');
-        typeLetter();
-        createScratchCards();
-    },3500);
-});
+document.getElementById("startBtn").onclick = ()=>{
+  const input = document.getElementById("username");
+  if(!input.value.trim()){
+    document.getElementById("nameError").textContent="Princess… I need your name first 🥺";
+    gsap.from(input,{x:-10,repeat:3,yoyo:true});
+    return;
+  }
 
-// PAGE 3: Handwritten Letter
-const letterText = document.getElementById('letterText');
+  userName = input.value.trim();
+  bgMusic.volume = 0.3;
+  bgMusic.play();
+
+  document.getElementById("question").textContent =
+    `${userName}… will you be my Valentine?`;
+
+  showPage("page1");
+};
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noMessage = document.getElementById("noMessage");
+
+noBtn.onclick = ()=>{
+  noCount++;
+
+  if(noCount===1){
+    gsap.from(noBtn,{x:-10,repeat:3,yoyo:true});
+    noMessage.textContent="Oopsie… let’s try that again 🥺";
+  }
+  else{
+    noBtn.style.position="absolute";
+    noBtn.style.left=Math.random()*80+"vw";
+    noBtn.style.top=Math.random()*80+"vh";
+    yesBtn.style.transform=`scale(${1+noCount*0.1})`;
+    noMessage.textContent="Just press yes, my love 💕";
+  }
+};
+
+yesBtn.onclick = ()=>{
+  confetti({particleCount:200,spread:120});
+  showPage("page2");
+  startOrbit();
+};
+
+function startOrbit(){
+  const images = document.querySelectorAll(".orbit");
+  images.forEach((img,i)=>{
+    gsap.to(img,{
+      duration:10,
+      repeat:-1,
+      ease:"linear",
+      motionPath:{
+        path:[
+          {x:0,y:-120},
+          {x:120,y:0},
+          {x:0,y:120},
+          {x:-120,y:0},
+          {x:0,y:-120}
+        ]
+      }
+    });
+  });
+}
+
+document.getElementById("pressMeBtn").onclick=()=>{
+  showPage("page3");
+  typeLetter();
+  createScratchCards();
+};
+
 function typeLetter(){
-    const letterContent = `Dear ${userName},\n\nFrom the moment you stepped into my world, something shifted softly and beautifully.\n\nYou are not just someone I admire…\nYou are someone who makes ordinary moments feel magical.\n\nYour smile feels like warmth on a quiet morning.\nYour presence feels like peace wrapped in comfort.\nYour heart feels like home.\n\nThank you for being gentle.\nThank you for being real.\nThank you for choosing love in a world that sometimes forgets how.\n\nI see you.\nI appreciate you.\nI cherish you.\n\nAnd if I had to choose again…\nI would still choose you.\nEvery time. 💗`;
-    let i=0;
-    let interval = setInterval(()=>{
-        letterText.textContent += letterContent[i];
-        i++;
-        if(i>=letterContent.length){ clearInterval(interval); triggerRain(); }
-    },30);
-}
+  const text = `Dear ${userName},
 
-// SCRATCH CARDS
-function createScratchCards(){
-    const messages = [
-        "You make love feel safe.","You are effortlessly beautiful inside and out.","Your heart is rare and precious.",
-        "Sunset picnic with strawberries 🍓","Late night ice cream run under the stars 🌙","Movie night wrapped in blankets 🎬",
-        "I will always listen.","I will support your dreams.","I will choose us."
-    ];
-    const cards = document.querySelectorAll('.scratchCard');
-    cards.forEach((card,i)=>{
-        card.width = 150;
-        card.height = 100;
-        const ctx = card.getContext('2d');
-        ctx.fillStyle = "#F4A6B8";
-        ctx.fillRect(0,0,card.width,card.height);
-        card.addEventListener('click',()=>{
-            ctx.clearRect(0,0,card.width,card.height);
-            ctx.fillStyle = "#FFF5F7";
-            ctx.font = "16px Arial";
-            ctx.fillText(messages[i],10,50);
-        });
-    });
-}
+From the moment you stepped into my world, something shifted softly and beautifully...
 
-// RAIN WORDS
-function triggerRain(){
-    const words = ["forever","us","love","always","the end","my heart","princess"];
-    const container = document.getElementById('rainWords');
-    for(let i=0;i<50;i++){
-        let word = document.createElement('div');
-        word.textContent = words[Math.floor(Math.random()*words.length)];
-        word.style.position = "absolute";
-        word.style.top = "-50px";
-        word.style.left = Math.random()*window.innerWidth + "px";
-        word.style.fontSize = Math.random()*20 + 16 + "px";
-        word.style.color = ["#F8C8DC","#F4A6B8","#C6A75E","#5E2B3B"][Math.floor(Math.random()*4)];
-        container.appendChild(word);
-        gsap.to(word,{y:window.innerHeight+50, rotation:Math.random()*360, duration:6+Math.random()*4, repeat:-1, ease:"linear"});
+And if I had to choose again…
+I would still choose you.
+
+Every time. 💗`;
+
+  let i=0;
+  const el=document.getElementById("letterText");
+
+  function type(){
+    if(i<text.length){
+      el.textContent+=text[i];
+      i++;
+      setTimeout(type,40);
     }
+  }
+  type();
 }
+
+function createScratchCards(){
+  const messages=[
+    "You make love feel safe.",
+    "You are effortlessly beautiful inside and out.",
+    "Your heart is rare and precious.",
+    "Sunset picnic with strawberries 🍓",
+    "Late night ice cream run 🌙",
+    "Movie night wrapped in blankets 🎬",
+    "I will always listen.",
+    "I will support your dreams.",
+    "I will choose us."
+  ];
+
+  const container=document.querySelector(".scratch-container");
+
+  messages.forEach(msg=>{
+    const canvas=document.createElement("canvas");
+    container.appendChild(canvas);
+
+    const ctx=canvas.getContext("2d");
+    canvas.width=300;
+    canvas.height=120;
+
+    ctx.fillStyle="#C6A75E";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#fff";
+    ctx.fillText("Scratch Me 🎀",100,60);
+
+    canvas.addEventListener("mousemove",(e)=>{
+      if(e.buttons===1){
+        ctx.globalCompositeOperation="destination-out";
+        ctx.beginPath();
+        ctx.arc(e.offsetX,e.offsetY,20,0,Math.PI*2);
+        ctx.fill();
+      }
+    });
+
+    canvas.addEventListener("mouseup",()=>{
+      scratched++;
+      if(scratched===9) startRain();
+    });
+
+    const textDiv=document.createElement("div");
+    textDiv.textContent=msg;
+    textDiv.style.position="absolute";
+    textDiv.style.marginTop="-100px";
+    container.appendChild(textDiv);
+  });
+}
+
+function startRain(){
+  const words=["forever","us","love","always","my heart","princess"];
+
+  words.forEach(word=>{
+    const span=document.createElement("span");
+    span.textContent=word;
+    span.style.left=Math.random()*100+"vw";
+    span.style.animationDuration=5+Math.random()*5+"s";
+    document.getElementById("rainContainer").appendChild(span);
+  });
+}
+
